@@ -1,0 +1,11 @@
+span {
+    font-size: 60px;
+}
+
+#minutes {
+    display: inline-block;
+}
+
+#seconds {
+    display: inline-block;
+}

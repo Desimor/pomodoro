@@ -1,6 +1,6 @@
 var Timer = {
-    minutesLeft: 0,
-    secondsLeft: 5,
+    minutesLeft: 25,
+    secondsLeft: 00,
     isOnBreak: false,
     numberOfBreaks: 0,
     init: function () {
@@ -11,24 +11,47 @@ var Timer = {
     cacheDOM: function () {
         this.minutes = document.querySelector('#minutes');
         this.seconds = document.querySelector('#seconds');
+        this.setButton = document.querySelector('#setTime');
         this.startButton = document.querySelector('#start');
+        this.stopButton = document.querySelector('#stop');
+        this.resetButton = document.querySelector('#reset');
     },
     render: function () {
-        this.minutes.textContent = this.pad(this.minutesLeft);
-        this.seconds.textContent = this.pad(this.secondsLeft);
+        this.minutes.value = this.pad(this.minutesLeft);
+        this.seconds.value = this.pad(this.secondsLeft);
     },
     addListeners: function () {
-        this
-            .startButton
-            .addEventListener('click', this.start.bind(this));
+        this.setButton.addEventListener('click', this.setTimer.bind(this));
+        this.startButton.addEventListener('click', this.start.bind(this));
+        this.stopButton.addEventListener('click', this.stop.bind(this));
+        this.resetButton.addEventListener('click', this.reset.bind(this));
+    },
+    setTimer: function () {
+        this.minutesLeft = +this.minutes.value;
+        this.startMinutes = +this.minutes.value;
+        this.secondsLeft = +this.seconds.value;
+        this.startSeconds = +this.seconds.value;
+        console.log(typeof this.minutesLeft);
     },
     start: function () {
+        console.log("start");
         if (!this.timer) {
-            timer = setInterval(this.tick.bind(this), 1000);
+            this.timer = setInterval(this.tick.bind(this), 1000);
         }
     },
+    stop: function () {
+        console.log('STOP!');
+        this.timer = clearInterval(this.timer);
+    },
+    reset: function () {
+        console.log('rest');
+        this.stop();
+        this.minutesLeft = +this.startMinutes;
+        this.secondsLeft = +this.startSeconds;
+        this.render();
+    },
     tick: function () {
-        if (this.secondsLeft === 0 && this.minutesLeft === 0) {
+        if (this.secondsLeft == 0 && this.minutesLeft == 0) {
             clearInterval(this.timer);
             this.timer = !this.timer;
             if (this.isOnBreak) {
@@ -46,12 +69,12 @@ var Timer = {
         this.render();
     },
     decrementMinutes: function () {
-        if (this.secondsLeft === 0) {
+        if (this.secondsLeft == 0) {
             this.minutesLeft -= 1;
         }
     },
     decrementSeconds: function () {
-        if (this.secondsLeft === 0) {
+        if (this.secondsLeft == 0) {
             this.secondsLeft = 59;
         } else {
             this.secondsLeft -= 1;
@@ -65,8 +88,8 @@ var Timer = {
         }
     },
     resetWorkTime: function () {
-        this.minutesLeft = 00;
-        this.secondsLeft = 05;
+        this.minutesLeft = this.minutes.value;
+        this.secondsLeft = this.seconds.value;
     },
     resetBreakTime: function () {
         if (this.numberOfBreaks < 3) {
@@ -78,6 +101,8 @@ var Timer = {
         this.secondsLeft = 0;
     }
 };
+
+
 
 Timer.init();
 // Data and Variable Declarations
